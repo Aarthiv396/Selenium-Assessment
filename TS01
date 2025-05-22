@@ -1,0 +1,35 @@
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+public class TodoAppTest {
+    private TodoApp todoApp;
+    @Before
+    public void setUp() {
+        todoApp = new TodoApp(); 
+    }
+    @Test
+    public void testAddSingleTodo() {
+        todoApp.addTodo("Drink Water");
+        assertTrue(todoApp.getTodos().contains("Drink Water"));
+        assertEquals(1, todoApp.getTodos().size());
+    }
+    @Test
+    public void testAddMultipleTodos() {
+        todoApp.addTodo("Drink Water");
+        todoApp.addTodo("Exercise Daily");
+        todoApp.addTodo("Meditate");
+        assertEquals(3, todoApp.getTodos().size());
+    }
+@Test
+public void testTodoCounter() {
+        todoApp.addTodo("Clean the House");
+        todoApp.addTodo("Study");
+        assertEquals(2, todoApp.getTodoCount()); 
+    }
+    @Test
+    public void testEmptyTodoShouldNotBeAdded() {
+        todoApp.addTodo("");
+        assertEquals(0, todoApp.getTodos().size());
+    }
+}
