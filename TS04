@@ -1,0 +1,37 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
+import java.util.List;
+import java.util.stream.Collectors;
+public class FilterTodoTest {
+    WebDriver driver;
+    @BeforeClass
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); 
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://todomvc.com/examples/angular/dist/browser/#/all"); 
+    }
+    @Test
+    public void testFilterTodos() {
+        driver.findElement(By.linkText("Active")).click();
+        List<WebElement> activeTodos = driver.findElements(By.cssSelector(".todo-list li"));
+        List<WebElement> completedInActiveView = activeTodos.stream()
+                .filter(item -> item.getAttribute("class").contains("completed"))
+                .collect(Collectors.toList());
+        Assert.assertTrue(completedInActiveView.isEmpty(), "Active view should not show completed items."); 
+        driver.findElement(By.linkText("Completed")).click();
+        List<WebElement> completedTodos = driver.findElements(By.cssSelector(".todo-list li"));
+        List<WebElement> nonCompletedInCompletedView = completedTodos.stream()
+                .filter(item -> !item.getAttribute("class").contains("completed"))
+                .collect(Collectors.toList());
+        Assert.assertTrue(nonCompletedInCompletedView.isEmpty(), "Completed view should not show active items.");
+    }
+@AfterClass
+    public void tearDown() {
+        driver.quit();
+    }
+}
